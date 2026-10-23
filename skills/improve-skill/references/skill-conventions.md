@@ -33,10 +33,23 @@ A skill runs with no one to approve a command when it's called headless (`claude
 - A load-time `cat` of a file that resolves outside the session's working directories is blocked whatever the rules say, also when the path goes through a symlink, such as a skill installed as a link to its repository. Rules can't fix that; adding the repository to `permissions.additionalDirectories` does.
 - Where the skill's repository has tests, add one that checks every load-time command against `allowed-tools`. Before relying on a skill headless, run it once with `claude -p` in default mode, not auto, and check that `permission_denials` is empty.
 
+## Naming
+
+Every skill's name starts with `ianf-`, so it can't collide with built-in skills or anyone else's: the `name:` in SKILL.md, its folder under `skills/` and its link in `~/.claude/skills/` are all `ianf-<name>`, and other skills and READMEs call it `/ianf-<name>`. Repositories and hooks don't take the prefix.
+
+## Installing
+
+Skills are standalone, not plugins: a repository has no `.claude-plugin/`, even when it holds several related skills. Each skill is linked into place:
+
+```sh
+ln -s ~/projects/claude/<repo>/skills/ianf-<name> ~/.claude/skills/ianf-<name>
+```
+
+A hook goes in the `hooks` section of `~/.claude/settings.json`, as a command that runs the script from the repository by its path under `$HOME`. Don't link the script itself: a script that finds its own files relative to its path looks in the link's folder.
+
 ## Repository
 
-A skill or plugin that gets its own repository lives in `~/projects/claude/<name>/`, and its GitHub repository is `claude-<name>`. The folder and the plugin's `name` stay bare, since the folder says what it is.
+A repository of skills or hooks lives in `~/projects/claude/<repo>/`, and its GitHub repository has the same bare name, with no `ianf-` or `claude-` prefix: the owner already namespaces it. Its description says it is a Claude Code skill (or skills, or hook), and it has the topics `claude-code` and `claude-skills`.
 
-- Publish with `github publish <dir> claude-<name>`. Without the name, the repository takes the folder's name.
-- `plugin.json`'s `homepage` and `repository`, and the README's `/plugin marketplace add ianflanagan1/claude-<name>`, name the prefixed repository.
-- To rename one already published, use `github rename <dir> claude-<name>`, then fix those references.
+- Publish with `github publish <dir>`; the repository takes the folder's name.
+- To rename one, use `github rename <dir> <new-name>`, rename the folder to match, then fix the links that name it.
