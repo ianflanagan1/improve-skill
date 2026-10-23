@@ -24,7 +24,7 @@ import sys
 import tempfile
 
 CONVENTIONS = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "skills", "improve-skill", "references", "skill-conventions.md")
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "skills", "ianf-improve-skill", "references", "skill-conventions.md")
 )
 
 FILE_TOOLS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}

@@ -1,5 +1,5 @@
 ---
-name: improve-skill
+name: ianf-improve-skill
 description: Fix a skill from the problems logged in ~/.claude/skill-feedback. Finds the skill's source, pins each problem down as a failing behaviour test, changes the skill, and shows the before and after for review. Never commits.
 argument-hint: [skill name]
 disable-model-invocation: true
@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 Turn logged problems with a skill into tested changes to its source, for the user to review and commit.
 
-## Gather (`/improve-skill $ARGUMENTS`)
+## Gather (`/ianf-improve-skill $ARGUMENTS`)
 
 Problem logs, with their number of open entries:
 
@@ -65,4 +65,4 @@ Add a line under each entry you handled:
 
 For each entry: the problem in one line, its class, and for fixes the behaviour now asserted, the test result before (failing, with its message) and after (passing), and the files changed. Then the full test and lint result, and `git diff --stat` for the source repository.
 
-End by telling the user the changes are uncommitted in `<repository>`, for review and `/commit` there. Don't commit, push or edit anything outside that repository and the log.
+End by telling the user the changes are uncommitted in `<repository>`, for review and `/ianf-commit` there. Don't commit, push or edit anything outside that repository and the log.

@@ -1,12 +1,12 @@
 # improve-skill
 
-A Claude Code plugin for keeping skills right: a hook that holds new and changed skills to your conventions, and a skill that fixes skills from the problems they log while running.
+A Claude Code hook and skill for keeping skills right: the hook holds new and changed skills to your conventions, and the skill fixes skills from the problems they log while running.
 
 ## Skill conventions
 
-`skills/improve-skill/references/skill-conventions.md` holds how you want skills written, for example the status-line emojis a skill's reply starts with. Edit it to add your own.
+`skills/ianf-improve-skill/references/skill-conventions.md` holds how you want skills written, for example the status-line emojis a skill's reply starts with. Edit it to add your own.
 
-The plugin's `PreToolUse` hook (`scripts/skill-conventions-gate.py`) puts it in front of Claude before the first skill change in each session, however the change is made. It refuses that first call with the file's text as the reason; Claude applies it and retries, and the rest of the session's calls pass. The text goes in the reason rather than a path, so Claude needs no permission to read a file outside its project. Nothing is added to prompts that don't touch skills.
+The `PreToolUse` hook (`scripts/skill-conventions-gate.py`) puts it in front of Claude before the first skill change in each session, however the change is made. It refuses that first call with the file's text as the reason; Claude applies it and retries, and the rest of the session's calls pass. The text goes in the reason rather than a path, so Claude needs no permission to read a file outside its project. Nothing is added to prompts that don't touch skills.
 
 A call changes a skill when it is:
 - a Write or Edit on a `SKILL.md` anywhere on disk, or on any file under a directory holding one;
@@ -17,8 +17,8 @@ Anything the hook can't parse passes, so a broken hook never blocks work. It nee
 
 ## Fixing skills from logged problems
 
-1. **Claude reports.** When any skill goes wrong (one of its scripts fails, an instruction can't be followed, Claude has to work around it, or you correct its result), Claude appends an entry to `~/.claude/skill-feedback/<skill>.md` and ends the run with one line pointing here. The steps are in `skills/improve-skill/references/reporting-problems.md`; one rule in your global `CLAUDE.md` turns them on for every skill, so skills don't need to change.
-2. **You run `/improve-skill <skill>`.** It finds the skill's source (following symlinks to its repository) and works through the open entries. For a script problem it states the behaviour the script should have, writes or strengthens a test for that behaviour, confirms the test fails, and changes the script until the whole suite passes. For an instruction problem it makes the smallest wording change and explains why it works.
+1. **Claude reports.** When any skill goes wrong (one of its scripts fails, an instruction can't be followed, Claude has to work around it, or you correct its result), Claude appends an entry to `~/.claude/skill-feedback/<skill>.md` and ends the run with one line pointing here. The steps are in `skills/ianf-improve-skill/references/reporting-problems.md`; one rule in your global `CLAUDE.md` turns them on for every skill, so skills don't need to change.
+2. **You run `/ianf-improve-skill <skill>`.** It finds the skill's source (following symlinks to its repository) and works through the open entries. For a script problem it states the behaviour the script should have, writes or strengthens a test for that behaviour, confirms the test fails, and changes the script until the whole suite passes. For an instruction problem it makes the smallest wording change and explains why it works.
 3. **You review and commit.** It marks each entry in the log and reports the before and after. It never commits; the changes are left in the skill's repository for you.
 
 ## Log entry format
@@ -32,31 +32,42 @@ Anything the hook can't parse passes, so a broken hook never blocks work. It nee
 - instead: staged the whole file with git add
 ```
 
-`/improve-skill` adds `- status: ...` under each entry it handles.
+`/ianf-improve-skill` adds `- status: ...` under each entry it handles.
 
 ## Install
 
-Install the plugin, which brings the hook and the skill (as `/improve-skill:improve-skill`):
-
-```
-/plugin marketplace add ianflanagan1/claude-improve-skill
-/plugin install improve-skill@improve-skill
-```
-
-Or from a local clone, `/plugin marketplace add ~/projects/claude/improve-skill` instead. That runs straight from the clone, so changes to it apply from the next session. A GitHub install is a copy: pick up new pushes with `/plugin marketplace update improve-skill`, then `/plugin update improve-skill@improve-skill`.
-
-Also symlink `skills/improve-skill/` to `~/.claude/skills/improve-skill/`, which gives the plain `/improve-skill` and the stable path the rule below reads from:
+Clone to `~/projects/claude/improve-skill`, then link the skill, which gives `/ianf-improve-skill` and the stable path the rule below reads from:
 
 ```sh
-ln -s ~/projects/claude/improve-skill/skills/improve-skill ~/.claude/skills/improve-skill
+ln -s ~/projects/claude/improve-skill/skills/ianf-improve-skill ~/.claude/skills/ianf-improve-skill
 ```
+
+Add the hook to `~/.claude/settings.json`. It runs straight from the clone, so changes to it apply from the next call:
+
+```json
+"hooks": {
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|Skill",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python3 -I \"$HOME/projects/claude/improve-skill/scripts/skill-conventions-gate.py\""
+        }
+      ]
+    }
+  ]
+}
+```
+
+Point it at the script in the clone rather than a link to it: the script finds the conventions relative to its own path.
 
 Then add to `~/.claude/CLAUDE.md`:
 
 ```markdown
 ## Skill problems
 
-When a skill goes wrong itself (a script of its fails, an instruction can't be followed, you work around it, or I correct a result its instructions led to), follow `~/.claude/skills/improve-skill/references/reporting-problems.md`. Skip this if that file doesn't exist.
+When a skill goes wrong itself (a script of its fails, an instruction can't be followed, you work around it, or I correct a result its instructions led to), follow `~/.claude/skills/ianf-improve-skill/references/reporting-problems.md`. Skip this if that file doesn't exist.
 ```
 
 ## Development

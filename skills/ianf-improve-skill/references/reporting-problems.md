@@ -1,6 +1,6 @@
 # Reporting a problem with a skill
 
-The protocol `/improve-skill` reads. Any skill is covered; skills don't need to mention it. Follow it when something went wrong with a skill itself:
+The protocol `/ianf-improve-skill` reads. Any skill is covered; skills don't need to mention it. Follow it when something went wrong with a skill itself:
 - a script failed, crashed or printed output you couldn't use
 - an instruction was wrong, unclear, contradictory or impossible to follow here
 - you had to work around the skill to finish
@@ -30,4 +30,4 @@ Keep it to what reproduces the problem: the shape of the input (a file with no t
 
 After the skill's normal output, add one line, even where the skill says to print nothing else:
 
-`Skill issue logged in ~/.claude/skill-feedback/<skill name>.md; /improve-skill <skill name> to fix it.`
+`Skill issue logged in ~/.claude/skill-feedback/<skill name>.md; /ianf-improve-skill <skill name> to fix it.`
