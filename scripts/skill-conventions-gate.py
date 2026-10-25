@@ -15,7 +15,7 @@ A tool call changes a skill when it is:
 
 Per-session state is a marker file in $TMPDIR/claude-skill-conventions/.
 
-Works on Python 3.9 (the macOS system python3).
+Runs on the Python 3.13 in this repository's devbox.
 """
 
 import json

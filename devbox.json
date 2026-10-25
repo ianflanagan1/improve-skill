@@ -2,7 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.18.4/.schema/devbox.schema.json",
   "packages": [
     "shunit2@2.1.8",
-    "shellcheck@latest"
+    "shellcheck@latest",
+    "python@3.13"
   ],
   "shell": {
     "scripts": {

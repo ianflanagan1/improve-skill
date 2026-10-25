@@ -13,7 +13,7 @@ A call changes a skill when it is:
 - the Skill tool invoking skill-creator;
 - a Bash command that names `SKILL.md` and looks like it writes (a redirect, `tee`, `sed -i`, `mv` and so on), not counting the bodies of its heredocs, which are data. This one is a heuristic.
 
-Anything the hook can't parse passes, so a broken hook never blocks work. It needs `python3` (the macOS system one is enough).
+Anything the hook can't parse passes, so a broken hook never blocks work. It runs on the Python 3.13 in this repository's devbox, so run `devbox install` in the clone before adding the hook.
 
 ## Fixing skills from logged problems
 
@@ -52,7 +52,7 @@ Add the hook to `~/.claude/settings.json`. It runs straight from the clone, so c
       "hooks": [
         {
           "type": "command",
-          "command": "python3 -I \"$HOME/projects/claude/improve-skill/scripts/skill-conventions-gate.py\""
+          "command": "\"$HOME/projects/claude/skill-authoring/.devbox/nix/profile/default/bin/python3\" -I \"$HOME/projects/claude/skill-authoring/scripts/skill-conventions-gate.py\""
         }
       ]
     }
@@ -60,7 +60,7 @@ Add the hook to `~/.claude/settings.json`. It runs straight from the clone, so c
 }
 ```
 
-Point it at the script in the clone rather than a link to it: the script finds the conventions relative to its own path.
+Point it at the script in the clone rather than a link to it: the script finds the conventions relative to its own path. The command names the devbox's interpreter by path rather than through `devbox run`, which would add its startup time to every tool call.
 
 Then add to `~/.claude/CLAUDE.md`:
 
