@@ -10,7 +10,8 @@ A tool call changes a skill when it is:
 - Write, Edit, MultiEdit or NotebookEdit on a SKILL.md, or on any file in a directory under one
   that holds a SKILL.md;
 - the Skill tool invoking skill-creator;
-- a Bash command naming SKILL.md that looks like it writes (a redirect, tee, sed -i, mv, ...).
+- a Bash command naming SKILL.md that looks like it writes (a redirect, tee, sed -i, mv, ...),
+  leaving out the bodies of its heredocs, which are data rather than what the command does.
 
 Per-session state is a marker file in $TMPDIR/claude-skill-conventions/.
 
@@ -40,6 +41,22 @@ BASH_WRITES = re.compile(
     re.VERBOSE,
 )
 
+# A heredoc's start (<<EOF, <<-'EOF', << "EOF"), capturing its delimiter; not a <<< here-string.
+HEREDOC = re.compile(r"""(?<!<)<<(?!<)-?\s*(['"]?)(\w+)\1""")
+
+
+def without_heredoc_bodies(command):
+    kept = []
+    delimiters = []
+    for line in command.split("\n"):
+        if delimiters:
+            if line.strip() == delimiters[0]:
+                delimiters.pop(0)
+            continue
+        kept.append(line)
+        delimiters = [m.group(2) for m in HEREDOC.finditer(line)]
+    return "\n".join(kept)
+
 
 def in_skill(path):
     if os.path.basename(path) == "SKILL.md":
@@ -61,7 +78,7 @@ def changes_skill(tool, tool_input):
     if tool == "Skill":
         return str(tool_input.get("skill", "")).split(":")[-1] == "skill-creator"
     if tool == "Bash":
-        command = str(tool_input.get("command", ""))
+        command = without_heredoc_bodies(str(tool_input.get("command", "")))
         return "SKILL.md" in command and BASH_WRITES.search(command) is not None
     return False
 

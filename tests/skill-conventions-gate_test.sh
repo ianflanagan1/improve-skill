@@ -86,6 +86,24 @@ test_a_bash_command_not_naming_a_skill_md_is_allowed() {
     assertAllowed "$(bash_tool s1 'echo hi >notes.txt')"
 }
 
+# The JSON strings below hold \n escapes, which the hook decodes into a multi-line command.
+
+test_a_heredoc_body_naming_a_skill_md_does_not_count_as_writing_it() {
+    assertAllowed "$(bash_tool s1 "cat >>log.md <<'EOF'\n- did: mv draft.md skills/hello/SKILL.md\nEOF")"
+}
+
+test_a_heredoc_written_into_a_skill_md_is_refused() {
+    assertRefused "$(bash_tool s1 "cat >skills/hello/SKILL.md <<'EOF'\nhello\nEOF")"
+}
+
+test_a_command_after_a_heredoc_still_counts() {
+    assertRefused "$(bash_tool s1 "cat >notes.md <<'EOF'\nx\nEOF\nmv notes.md SKILL.md")"
+}
+
+test_a_here_string_is_not_taken_for_a_heredoc() {
+    assertRefused "$(bash_tool s1 "cat <<<hi\nmv draft.md SKILL.md")"
+}
+
 # --- Once per session
 
 test_the_second_skill_change_in_a_session_is_allowed() {

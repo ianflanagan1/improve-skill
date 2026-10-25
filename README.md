@@ -11,7 +11,7 @@ The `PreToolUse` hook (`scripts/skill-conventions-gate.py`) puts it in front of 
 A call changes a skill when it is:
 - a Write or Edit on a `SKILL.md` anywhere on disk, or on any file under a directory holding one;
 - the Skill tool invoking skill-creator;
-- a Bash command that names `SKILL.md` and looks like it writes (a redirect, `tee`, `sed -i`, `mv` and so on). This one is a heuristic.
+- a Bash command that names `SKILL.md` and looks like it writes (a redirect, `tee`, `sed -i`, `mv` and so on), not counting the bodies of its heredocs, which are data. This one is a heuristic.
 
 Anything the hook can't parse passes, so a broken hook never blocks work. It needs `python3` (the macOS system one is enough).
 
