@@ -5,7 +5,7 @@
 
 root=$(cd "$(dirname "$0")/.." && pwd)
 gate=$root/scripts/skill-conventions-gate.py
-conventions=$root/skills/ianf-improve-skill/references/skill-conventions.md
+conventions=$root/skill-conventions.md
 
 setUp() {
     sandbox=$(mktemp -d "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")

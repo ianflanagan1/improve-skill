@@ -1,6 +1,6 @@
 # Skill conventions
 
-How the user wants skills written. Apply these whenever you create or change a skill, by any route: by hand, with skill-creator, or with another skill. Where they differ from skill-creator's defaults, these win. Where the skill's own repository consistently does something different, follow the repository.
+How the user wants skills written. Apply these whenever you create or change a skill, by any route: by hand, with skill-creator, or with another skill. Where they differ from skill-creator's defaults, these win. Where the skill's own repository consistently does something different, follow the repository. If `~/projects/claude/skill-patterns/` exists, it holds named designs for how skills work together, such as a private sub-skill, listed in its README.
 
 ## Status line
 

@@ -4,7 +4,7 @@ A Claude Code hook and skill for keeping skills right: the hook holds new and ch
 
 ## Skill conventions
 
-`skills/ianf-improve-skill/references/skill-conventions.md` holds how you want skills written, for example the status-line emojis a skill's reply starts with. Edit it to add your own.
+`skill-conventions.md` holds how you want skills written, for example the status-line emojis a skill's reply starts with. Edit it to add your own. It sits at the top of the repository, not inside a skill, because everything here that writes or changes skills shares it.
 
 The `PreToolUse` hook (`scripts/skill-conventions-gate.py`) puts it in front of Claude before the first skill change in each session, however the change is made. It refuses that first call with the file's text as the reason; Claude applies it and retries, and the rest of the session's calls pass. The text goes in the reason rather than a path, so Claude needs no permission to read a file outside its project. Nothing is added to prompts that don't touch skills.
 
