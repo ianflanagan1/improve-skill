@@ -23,6 +23,14 @@ This section defines the scheme. The command-line tools built on [cli-kit](https
 - After ⚠️: the precondition that failed and what the user should do about it.
 - After ➖: nothing. Make no tool calls once you know there's nothing to do.
 
+## Next step
+
+When a run leaves the user a step to take, such as running another skill, the reply ends with one line starting 👉: the step, in the words the user would type, then what it will do. Write it in SKILL.md as the exact text in backticks, with placeholders for the details, such as `👉 Run /ianf-tune-rules in this session: it adds <n> evidence lines to the guides without asking, …`.
+
+- At most one 👉 line, and always last.
+- Only for a step the workflow needs. Advice the user may ignore stays in the body.
+- When a skill usually ends with a 👉 line but this run leaves nothing for that step, end instead with a ➖ line saying so, such as `➖ Nothing for /ianf-tune-rules to record.`, so the missing step reads as decided, not forgotten.
+
 ## Permissions
 
 A skill runs with no one to approve a command when it's called headless (`claude -p`, CI, a script). Auto mode and approval prompts hide a missing rule interactively, so don't take an interactive run as proof.
@@ -36,6 +44,23 @@ A skill runs with no one to approve a command when it's called headless (`claude
 ## Naming
 
 Every skill's name starts with `ianf-`, so it can't collide with built-in skills or anyone else's: the `name:` in SKILL.md, its folder under `skills/` and its link in `~/.claude/skills/` are all `ianf-<name>`, and other skills and READMEs call it `/ianf-<name>`. Repositories and hooks don't take the prefix.
+
+## Invocation
+
+Decide whether agents can invoke the skill, and lean hard towards **cannot**: set `disable-model-invocation: true`, so it runs only when the user types its name. Always write the field, even when it matches Claude Code's default, so every skill shows the decision. Let agents invoke it (`disable-model-invocation: false`) only when it has to start without the user typing its name: when it reacts to something Claude meets mid-task, such as `/ianf-coupled-tags` before editing a tagged line, or to requests from people who won't know its name, such as `/ianf-report-problem`. Then its description must name the situations that should trigger it.
+
+Whenever you create a skill or change this setting, report the choice on a line of its own, as one of these exact texts, followed by a one-line reason, so the user can overrule it:
+
+- `🤖 Agents can invoke this.`
+- `🔒 Agents cannot invoke this.`
+
+Talk to the user in these terms, never as `disable-model-invocation` being true or false, which reads backwards.
+
+## Storing files
+
+A skill keeps the files it writes for later runs (logs, caches, records of what it did) in `~/.local/state/claude-skills/<skill>/`, named by its full `ianf-` name, and nowhere else outside the project it works on. A script that writes there sets the path once, in a variable at its top.
+
+Never in `~/.claude/`: Claude Code owns that directory, and a future version may claim a name there. When Claude's permissions are tightened, allowing writes to `~/.claude/` would also allow changes to its settings, hooks and instructions, while one rule such as `Edit(~/.local/state/claude-skills/**)` (and the same path under the sandbox's `allowWrite`) covers every skill's state and nothing else. `~/.local/state` is where the XDG convention puts such state, on Linux and macOS alike.
 
 ## Installing
 
