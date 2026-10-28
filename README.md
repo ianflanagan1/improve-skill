@@ -1,6 +1,6 @@
-# improve-skill
+# skill-authoring
 
-A Claude Code hook and skill for keeping skills right: the hook holds new and changed skills to your conventions, and the skill fixes skills from the problems they log while running.
+A Claude Code hook and skills for keeping skills right: `/ianf-skill-new` creates skills to your conventions, the hook holds every new and changed skill to them, `/ianf-skill-log-problem` logs a problem with a skill as it happens, and `/ianf-skill-fix` fixes skills from those logs.
 
 ## Skill conventions
 
@@ -14,6 +14,10 @@ A call changes a skill when it is:
 - a Bash command that names `SKILL.md` and looks like it writes (a redirect, `tee`, `sed -i`, `mv` and so on), not counting the bodies of its heredocs, which are data. This one is a heuristic.
 
 Anything the hook can't parse passes, so a broken hook never blocks work. It runs on the Python 3.13 in this repository's devbox, so run `devbox install` in the clone before adding the hook.
+
+## Creating skills
+
+Run `/ianf-skill-new <what the skill should do>`. It reads the conventions before planning, agrees the name, description, invocation and repository with you, writes the skill (test-first where it has scripts), links it into `~/.claude/skills/` and puts the install steps in the repository's README. It publishes to GitHub only when asked, and never commits. It runs only when you type it, so it never competes with skill-creator for a request.
 
 ## Fixing skills from logged problems
 
