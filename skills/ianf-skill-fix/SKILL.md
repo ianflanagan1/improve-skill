@@ -1,25 +1,26 @@
 ---
-name: ianf-improve-skill
-description: Fix a skill from the problems logged in ~/.claude/skill-feedback. Finds the skill's source, pins each problem down as a failing behaviour test, changes the skill, and shows the before and after for review. Never commits.
+name: ianf-skill-fix
+description: Fix a skill from the problems logged by /ianf-skill-log-problem. Finds the skill's source, pins each problem down as a failing behaviour test, changes the skill, and shows the before and after for review. Never commits.
 argument-hint: [skill name]
 disable-model-invocation: true
+allowed-tools: Bash(sh *scripts/list-logs.sh*), Read(~/.local/state/claude-skills/ianf-skill-log-problem/**), Edit(~/.local/state/claude-skills/ianf-skill-log-problem/**)
 ---
 
-# Improve skill
+# Fix a skill
 
 Turn logged problems with a skill into tested changes to its source, for the user to review and commit.
 
-## Gather (`/ianf-improve-skill $ARGUMENTS`)
+## Gather (`/ianf-skill-fix $ARGUMENTS`)
 
-Problem logs, with their number of open entries:
+Problem logs in `~/.local/state/claude-skills/ianf-skill-log-problem/`, with their number of open entries:
 
 ```
-!`for f in ~/.claude/skill-feedback/*.md; do [ -f "$f" ] && printf '%s  %s open\n' "$(basename "$f" .md)" "$(grep -c '^## ' "$f" | tr -d ' ')"; done 2>/dev/null; echo end`
+!`sh "${CLAUDE_SKILL_DIR}/scripts/list-logs.sh"`
 ```
 
-- No logs listed: reply `No skill problems logged.` and stop.
+- `No skill problems logged.`, or no log with open entries: reply `➖ No skill problems logged.` and stop.
 - `$ARGUMENTS` names the skill. If it is empty and only one log has open entries, use that one; otherwise ask which.
-- Read that log. Entries marked `- status:` are already handled; skip them.
+- Read that log, `<skill>.md` in that directory. Entries marked `- status:` are already handled; skip them.
 
 ## Find the source
 

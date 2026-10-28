@@ -17,8 +17,8 @@ Anything the hook can't parse passes, so a broken hook never blocks work. It run
 
 ## Fixing skills from logged problems
 
-1. **Claude reports.** When any skill goes wrong (one of its scripts fails, an instruction can't be followed, Claude has to work around it, or you correct its result), Claude appends an entry to `~/.claude/skill-feedback/<skill>.md` and ends the run with one line pointing here. The steps are in `skills/ianf-improve-skill/references/reporting-problems.md`; one rule in your global `CLAUDE.md` turns them on for every skill, so skills don't need to change.
-2. **You run `/ianf-improve-skill <skill>`.** It finds the skill's source (following symlinks to its repository) and works through the open entries. For a script problem it states the behaviour the script should have, writes or strengthens a test for that behaviour, confirms the test fails, and changes the script until the whole suite passes. For an instruction problem it makes the smallest wording change and explains why it works.
+1. **The problem is logged.** When any skill goes wrong (one of its scripts fails, an instruction can't be followed, Claude has to work around it, or you correct its result), Claude runs `/ianf-skill-log-problem`, which appends an entry, stamped with the date and time, to `~/.local/state/claude-skills/ianf-skill-log-problem/<skill>.md`, and ends the run with a line starting 🐞 that says where. Claude can invoke it itself, and its description names those moments; one line in your global `CLAUDE.md` makes it reliable mid-task. Skills don't need to mention it. You can also run `/ianf-skill-log-problem <skill> <what went wrong>` yourself when you notice a problem.
+2. **You run `/ianf-skill-fix <skill>`.** It finds the skill's source (following symlinks to its repository) and works through the open entries. For a script problem it states the behaviour the script should have, writes or strengthens a test for that behaviour, confirms the test fails, and changes the script until the whole suite passes. For an instruction problem it makes the smallest wording change and explains why it works.
 3. **You review and commit.** It marks each entry in the log and reports the before and after. It never commits; the changes are left in the skill's repository for you.
 
 ## Log entry format
@@ -32,14 +32,16 @@ Anything the hook can't parse passes, so a broken hook never blocks work. It run
 - instead: staged the whole file with git add
 ```
 
-`/ianf-improve-skill` adds `- status: ...` under each entry it handles.
+`/ianf-skill-fix` adds `- status: ...` under each entry it handles.
 
 ## Install
 
-Clone to `~/projects/claude/improve-skill`, then link the skill, which gives `/ianf-improve-skill` and the stable path the rule below reads from:
+Clone to `~/projects/claude/skill-authoring`, then link the skills:
 
 ```sh
-ln -s ~/projects/claude/improve-skill/skills/ianf-improve-skill ~/.claude/skills/ianf-improve-skill
+for s in ~/projects/claude/skill-authoring/skills/*/; do
+    ln -s "${s%/}" ~/.claude/skills/"$(basename "$s")"
+done
 ```
 
 Add the hook to `~/.claude/settings.json`. It runs straight from the clone, so changes to it apply from the next call:
@@ -67,7 +69,7 @@ Then add to `~/.claude/CLAUDE.md`:
 ```markdown
 ## Skill problems
 
-When a skill goes wrong itself (a script of its fails, an instruction can't be followed, you work around it, or I correct a result its instructions led to), follow `~/.claude/skills/ianf-improve-skill/references/reporting-problems.md`. Skip this if that file doesn't exist.
+When a skill goes wrong, run `/ianf-skill-log-problem`.
 ```
 
 ## Development

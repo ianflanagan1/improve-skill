@@ -8,7 +8,7 @@
   "shell": {
     "scripts": {
       "test": "sh tests/run.sh",
-      "lint": "shellcheck -x -s sh $(find tests -name '*.sh' -type f)"
+      "lint": "shellcheck -x -s sh $(find tests skills -name '*.sh' -type f)"
     }
   }
 }

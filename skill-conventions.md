@@ -2,6 +2,8 @@
 
 How the user wants skills written. Apply these whenever you create or change a skill, by any route: by hand, with skill-creator, or with another skill. Where they differ from skill-creator's defaults, these win. Where the skill's own repository consistently does something different, follow the repository. If `~/projects/claude/skill-patterns/` exists, it holds named designs for how skills work together, such as a private sub-skill, listed in its README.
 
+Emojis in skills' output each have one meaning: ✅ 🛑 ❌ ⚠️ ➖ open a status line, 👉 is a next step for the user, 🤖 and 🔒 say whether agents can invoke a skill, and 🐞 says a skill problem was logged (`/ianf-skill-log-problem`). Don't use them for anything else, or other emojis for these.
+
 ## Status line
 
 A skill's reply starts with one status line when its run ends in one of these outcomes. Write each in SKILL.md as the exact text in backticks: the emoji, a space, and a short sentence ending in a full stop.
