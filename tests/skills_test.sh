@@ -54,5 +54,29 @@ test_every_skill_states_whether_agents_can_invoke_it() {
     done
 }
 
+test_every_skill_names_its_model() {
+    for f in "$root"/skills/*/SKILL.md; do
+        grep --quiet '^model: [a-z]' "$f" || fail "$(basename "$(dirname "$f")") names no model"
+    done
+}
+
+test_the_fix_skill_runs_forked_on_opus_and_is_waited_for() {
+    for field in 'model: opus' 'effort: medium' 'context: fork' 'agent: general-purpose' 'background: false'; do
+        grep --quiet --line-regexp "$field" "$root/skills/ianf-skill-fix/SKILL.md" || fail "ianf-skill-fix lacks: $field"
+    done
+}
+
+test_the_fix_skill_never_asks_mid_run() {
+    if grep --word-regexp --ignore-case 'ask' "$root/skills/ianf-skill-fix/SKILL.md"; then fail 'ianf-skill-fix asks'; fi
+}
+
+test_the_skills_that_need_the_conversation_run_inline_on_the_session_model() {
+    for skill in ianf-skill-log-problem ianf-skill-new; do
+        f=$root/skills/$skill/SKILL.md
+        grep --quiet --line-regexp 'model: inherit' "$f" || fail "$skill lacks: model: inherit"
+        if grep --quiet '^context: fork' "$f"; then fail "$skill forks"; fi
+    done
+}
+
 # shellcheck disable=SC1090
 . "${SHUNIT2:-$(command -v shunit2)}"

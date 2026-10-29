@@ -58,6 +58,22 @@ Whenever you create a skill or change this setting, report the choice on a line 
 
 Talk to the user in these terms, never as `disable-model-invocation` being true or false, which reads backwards.
 
+## Context and model
+
+Decide where each skill runs and on which model, and write the settings out, as for invocation.
+
+**Fork** (`context: fork`) a skill that needs nothing from the conversation but the text typed after its name: it gathers its inputs as it loads or with its own commands, asks the user nothing part way, and its final message is the whole result. It then runs as a subagent without the conversation's history, which saves most of a run's tokens late in a long session. A question it would ask becomes a ⚠️ line, with a 👉 line saying what to pass next time. **Keep inline** a skill that reads the conversation, asks questions or waits for approval part way, or sets up the main agent for later work, such as `/ianf-coupled-tags`.
+
+A forked skill writes all five settings:
+
+- `model:` chosen for the work: `haiku` for short text written from facts it's given, `sonnet` for routine multi-step work, `opus` where the planning is hard.
+- `effort:` `low`, `medium`, `high`, `xhigh` or `max`. Claude Code's own default for Opus is `medium`.
+- `context: fork`
+- `agent:` `general-purpose`, the default, or an agent with only the tools the skill needs, which pays off when it makes many tool calls.
+- `background: false`, or the caller gets a task notification later instead of the result; a `claude --print` caller gets nothing.
+
+An inline skill writes `model: inherit`. Switching model inline makes the whole conversation cache again on the other model, which costs more than it saves. It leaves out `effort`, `context`, `agent` and `background`: Claude Code has no value meaning the session's effort or inline, and the last two apply only to forks.
+
 ## Storing files
 
 A skill keeps the files it writes for later runs (logs, caches, records of what it did) in `~/.local/state/claude-skills/<skill>/`, named by its full `ianf-` name, and nowhere else outside the project it works on. A script that writes there sets the path once, in a variable at its top.

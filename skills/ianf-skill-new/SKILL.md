@@ -3,6 +3,7 @@ name: ianf-skill-new
 description: Create a Claude Code skill to the user's conventions, in its own repository under ~/projects/claude or an existing one, test-first where it has scripts, linked into ~/.claude/skills with its install steps in the README. Optionally publishes the repository to GitHub. Never commits.
 argument-hint: <what the skill should do>
 disable-model-invocation: true
+model: inherit
 allowed-tools: Bash(ls ~/projects/claude), Bash(git init:*), Bash(ln -s:*), Bash(github publish:*), Bash(github view:*), Bash(github edit:*)
 ---
 
