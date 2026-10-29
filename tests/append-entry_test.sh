@@ -7,7 +7,7 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 script=$root/skills/ianf-skill-log-problem/scripts/append-entry.sh
 
 setUp() {
-    sandbox=$(mktemp -d "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")
+    sandbox=$(mktemp --directory "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")
     HOME=$sandbox
     export HOME
     logs=$HOME/.local/state/claude-skills/ianf-skill-log-problem
@@ -47,7 +47,7 @@ test_the_log_directory_is_created_when_missing() {
 test_a_second_entry_is_added_after_the_first() {
     append ianf-x >/dev/null
     append ianf-x >/dev/null
-    assertEquals 2 "$(grep -c '^## ' "$logs/ianf-x.md")"
+    assertEquals 2 "$(grep --count '^## ' "$logs/ianf-x.md")"
 }
 
 test_it_prints_the_line_that_tells_the_user_where_the_problem_is_logged() {

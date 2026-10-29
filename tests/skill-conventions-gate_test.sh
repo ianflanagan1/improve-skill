@@ -8,7 +8,7 @@ gate=$root/scripts/skill-conventions-gate.py
 conventions=$root/skill-conventions.md
 
 setUp() {
-    sandbox=$(mktemp -d "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")
+    sandbox=$(mktemp --directory "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")
     sandbox=$(cd "$sandbox" && pwd -P)
     TMPDIR=$sandbox/tmp
     export TMPDIR

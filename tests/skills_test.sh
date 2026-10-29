@@ -49,7 +49,7 @@ EOF
 
 test_every_skill_states_whether_agents_can_invoke_it() {
     for f in "$root"/skills/*/SKILL.md; do
-        grep -Eq '^disable-model-invocation: (true|false)$' "$f" ||
+        grep --extended-regexp --quiet '^disable-model-invocation: (true|false)$' "$f" ||
             fail "$(basename "$(dirname "$f")") has no disable-model-invocation: true or false"
     done
 }

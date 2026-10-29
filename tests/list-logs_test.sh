@@ -7,7 +7,7 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 script=$root/skills/ianf-skill-fix/scripts/list-logs.sh
 
 setUp() {
-    sandbox=$(mktemp -d "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")
+    sandbox=$(mktemp --directory "${SHUNIT_TMPDIR:-${TMPDIR:-/tmp}}/test.XXXXXX")
     HOME=$sandbox
     export HOME
     logs=$HOME/.local/state/claude-skills/ianf-skill-log-problem

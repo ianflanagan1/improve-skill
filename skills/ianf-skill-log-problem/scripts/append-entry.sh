@@ -8,7 +8,7 @@
 #
 # Prints the line to show the user. Exit status: 0 logged, 2 bad usage (nothing written).
 
-set -u
+set -o nounset
 
 # COUPLED:skill-log-dir. = ianf-skill-fix scripts/list-logs.sh
 dir=$HOME/.local/state/claude-skills/ianf-skill-log-problem
