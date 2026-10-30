@@ -1,5 +1,5 @@
 #!/bin/sh
-# Checks across the skills' SKILL.md files. Run with tests/run.sh.
+# Checks across the skills' SKILL.md files. Run with `devbox run -- task test`.
 
 root=$(cd "$(dirname "$0")/.." && pwd)
 

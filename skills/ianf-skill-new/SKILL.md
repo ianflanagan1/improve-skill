@@ -29,7 +29,7 @@ If `~/.claude/skills/ianf-<name>` or the skill's folder already exists, reply `â
 
 ## 3. Lay out the repository
 
-For a new repository, `git init` it in `~/projects/claude/<repo>/` and copy the shape of `~/projects/claude/skill-authoring`: an MIT `LICENSE` in the user's name and year, a `README.md`, and, when the skill has scripts, a `devbox.json` with `test` and `lint` scripts and a `tests/run.sh`. For an existing repository, follow what it already does, and note any uncommitted changes in it so yours stay separate.
+For a new repository, `git init` it in `~/projects/claude/<repo>/` and copy the shape of `~/projects/claude/skill-authoring`: an MIT `LICENSE` in the user's name and year, a `README.md`, and, when the skill has scripts, a `devbox.json` that pins the tools, `go-task` among them, and a `Taskfile.yml` with `test` and `lint` tasks. For an existing repository, follow what it already does, and note any uncommitted changes in it so yours stay separate.
 
 ## 4. Write it, test-first where there are scripts
 

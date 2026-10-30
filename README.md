@@ -79,6 +79,6 @@ When a skill goes wrong, run `/ianf-skill-log-problem`.
 ## Development
 
 ```sh
-devbox run test   # shunit2
-devbox run lint   # shellcheck
+devbox run -- task test   # shunit2
+devbox run -- task lint   # shellcheck
 ```

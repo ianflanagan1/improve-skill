@@ -3,12 +3,7 @@
   "packages": [
     "shunit2@2.1.8",
     "shellcheck@latest",
-    "python@3.13"
-  ],
-  "shell": {
-    "scripts": {
-      "test": "sh tests/run.sh",
-      "lint": "shellcheck --external-sources --shell sh $(find tests skills -name '*.sh' -type f)"
-    }
-  }
+    "python@3.13",
+    "go-task@3.53.1"
+  ]
 }

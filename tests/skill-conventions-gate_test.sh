@@ -1,5 +1,5 @@
 #!/bin/sh
-# Behaviour of scripts/skill-conventions-gate.py. Run with tests/run.sh.
+# Behaviour of scripts/skill-conventions-gate.py. Run with `devbox run -- task test`.
 #
 # Each test gets its own TMPDIR, so the gate's per-session state starts empty.
 

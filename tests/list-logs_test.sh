@@ -1,5 +1,5 @@
 #!/bin/sh
-# Behaviour of skills/ianf-skill-fix/scripts/list-logs.sh. Run with tests/run.sh.
+# Behaviour of skills/ianf-skill-fix/scripts/list-logs.sh. Run with `devbox run -- task test`.
 #
 # Each test gets its own HOME, so the log directory starts empty.
 
